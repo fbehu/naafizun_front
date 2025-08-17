@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { ArrowLeft, User, Settings as SettingsIcon, Archive, Globe, MessageSquare, Plus, LogOut, Eye, EyeOff, FileText } from 'lucide-react';
+import { ArrowLeft, User, Settings as SettingsIcon, Archive, Globe, MessageSquare, Plus, LogOut, Eye, EyeOff, FileText, Sun, Moon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { authFetch } from '@/utils/authFetch';
@@ -347,6 +347,34 @@ const Settings: React.FC<SettingsProps> = ({
                   <svg viewBox="0 0 20 20" fill="currentColor"></svg>
                     <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
                   {/* </svg> */}
+                </div>
+              </button>
+            </CardContent>
+          </Card>
+
+          {/* Theme Toggle */}
+          <Card className={darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white'}>
+            <CardContent className="p-4">
+              <button
+                onClick={() => onDarkModeChange(!darkMode)}
+                className="w-full flex items-center justify-between"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    {darkMode ? (
+                      <Moon className="w-4 h-4 text-blue-600" />
+                    ) : (
+                      <Sun className="w-4 h-4 text-blue-600" />
+                    )}
+                  </div>
+                  <span className={`font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                    {darkMode ? 'Tungi rejim' : 'Kunduzgi rejim'}
+                  </span>
+                </div>
+                <div className="w-5 h-5 text-gray-400">
+                  <svg viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                  </svg>
                 </div>
               </button>
             </CardContent>
