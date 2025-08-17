@@ -271,11 +271,28 @@ const Sklad: React.FC<SkladProps> = ({ darkMode, onBack, onSettingsClick }) => {
         }),
       });
 
-      if (!res.ok) throw new Error("Dori qo'shishda xatolik");
+      if (!res.ok) {
+        const errorData = await res.json();
+        console.error("Error response:", errorData);
+        throw new Error("Dori qo'shishda xatolik");
+      }
+      
       await fetchMedicines();
       setIsAddModalOpen(false);
+      
+      toast({
+        title: "Muvaffaqiyat",
+        description: "Dori muvaffaqiyatli qo'shildi",
+        className: darkMode ? "bg-gray-800 border-gray-700" : "",
+      });
     } catch (err) {
       console.error("Error adding medicine:", err);
+      toast({
+        variant: "destructive",
+        title: "Xatolik",
+        description: "Dori qo'shishda xatolik yuz berdi",
+        className: darkMode ? "bg-gray-800 border-gray-700" : "",
+      });
     }
   };
 

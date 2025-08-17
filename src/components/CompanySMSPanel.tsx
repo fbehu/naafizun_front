@@ -288,9 +288,23 @@ const CompanySMSPanel: React.FC<CompanySMSPanelProps> = ({ darkMode }) => {
 
           {/* SMS Message */}
           <div className="space-y-2">
-            <Label className={darkMode ? 'text-gray-300' : 'text-gray-700'}>
-              SMS matni
-            </Label>
+            <div className="flex items-center justify-between">
+              <Label className={darkMode ? 'text-gray-300' : 'text-gray-700'}>
+                SMS matni
+              </Label>
+              {selectedCompany && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={generateSMSMessage}
+                  className={`${darkMode ? 'border-gray-600 text-gray-300 hover:bg-gray-700' : 'border-gray-300'}`}
+                >
+                  <Receipt className="w-4 h-4 mr-2" />
+                  Avtomatik to'ldirish
+                </Button>
+              )}
+            </div>
             <Textarea
               value={smsMessage}
               onChange={(e) => setSmsMessage(e.target.value)}
