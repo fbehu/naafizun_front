@@ -21,12 +21,14 @@ interface Polyclinic {
   phone: string;
   manager: string; // stores "Region - District"
   archived: boolean;
+  doctorCount?: number;
 }
 
 const PolyclinicsPage: React.FC = () => {
   const [polyclinics, setPolyclinics] = useState<Polyclinic[]>([]);
   const [filtered, setFiltered] = useState<Polyclinic[]>([]);
   const [loading, setLoading] = useState(false);
+  const [doctorCounts, setDoctorCounts] = useState<{[key: number]: number}>({});
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isAddPolyclinicModalOpen, setIsAddPolyclinicModalOpen] = useState(false);
@@ -45,6 +47,28 @@ const PolyclinicsPage: React.FC = () => {
     document.title = "Poliklinikalar — Boshqaruv";
   }, []);
 
+  // Fetch doctor counts for each polyclinic
+  const fetchDoctorCounts = async (polyclinicIds: number[]) => {
+    try {
+      const counts: {[key: number]: number} = {};
+      await Promise.all(
+        polyclinicIds.map(async (id) => {
+          try {
+            const response = await api.get(`/polyclinic_doctors/?polyclinic=${id}`);
+            const doctors = (response as any).results || response || [];
+            counts[id] = Array.isArray(doctors) ? doctors.filter((d: any) => !d.archived && d.is_active).length : 0;
+          } catch (error) {
+            console.error(`Error fetching doctors for polyclinic ${id}:`, error);
+            counts[id] = 0;
+          }
+        })
+      );
+      setDoctorCounts(counts);
+    } catch (error) {
+      console.error("Error fetching doctor counts:", error);
+    }
+  };
+
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -53,6 +77,12 @@ const PolyclinicsPage: React.FC = () => {
         const data: Polyclinic[] = (response as any).results || response;
         setPolyclinics(data);
         setFiltered(data);
+        
+        // Fetch doctor counts for all polyclinics
+        const activePolyclinics = data.filter(p => !p.archived);
+        if (activePolyclinics.length > 0) {
+          await fetchDoctorCounts(activePolyclinics.map(p => p.id));
+        }
       } catch (error) {
         console.error("Error loading polyclinics:", error);
         toast({
@@ -139,6 +169,12 @@ const PolyclinicsPage: React.FC = () => {
       const data: Polyclinic[] = (response as any).results || response;
       setPolyclinics(data);
       setFiltered(data);
+      
+      // Refresh doctor counts
+      const activePolyclinics = data.filter(p => !p.archived);
+      if (activePolyclinics.length > 0) {
+        await fetchDoctorCounts(activePolyclinics.map(p => p.id));
+      }
       setIsAddPolyclinicModalOpen(false);
     } catch (error) {
       console.error("Error adding polyclinic:", error);
@@ -167,6 +203,12 @@ const PolyclinicsPage: React.FC = () => {
       const data: Polyclinic[] = (response as any).results || response;
       setPolyclinics(data);
       setFiltered(data);
+      
+      // Refresh doctor counts
+      const activePolyclinics = data.filter(p => !p.archived);
+      if (activePolyclinics.length > 0) {
+        await fetchDoctorCounts(activePolyclinics.map(p => p.id));
+      }
       setIsEditPolyclinicModalOpen(false);
       setEditingPolyclinic(null);
     } catch (error) {
@@ -200,6 +242,12 @@ const PolyclinicsPage: React.FC = () => {
       const data: Polyclinic[] = (response as any).results || response;
       setPolyclinics(data);
       setFiltered(data);
+      
+      // Refresh doctor counts
+      const activePolyclinics = data.filter(p => !p.archived);
+      if (activePolyclinics.length > 0) {
+        await fetchDoctorCounts(activePolyclinics.map(p => p.id));
+      }
       setIsDeleteMode(false);
       setSelectedForDelete([]);
     } catch (error) {
@@ -380,7 +428,14 @@ const PolyclinicsPage: React.FC = () => {
                         >
                           <h3 className="font-medium text-gray-900 dark:text-white">{polyclinic.name}</h3>
                           <p className="text-sm text-gray-500 dark:text-gray-400">{polyclinic.address}</p>
-                          <p className="text-xs text-gray-400 dark:text-gray-500">{polyclinic.manager}</p>
+                          <div className="flex items-center justify-between mt-1">
+                            <p className="text-xs text-gray-400 dark:text-gray-500">{polyclinic.manager}</p>
+                            <div className="flex items-center gap-1 bg-blue-100 dark:bg-blue-900 px-2 py-1 rounded-full">
+                              <span className="text-xs font-medium text-blue-600 dark:text-blue-400">
+                                {doctorCounts[polyclinic.id] || 0} врач
+                              </span>
+                            </div>
+                          </div>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
