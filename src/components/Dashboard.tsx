@@ -444,20 +444,7 @@ const Dashboard: React.FC<DashboardProps> = ({ darkMode }) => {
       </div>
 
       {/* Summary Cards */}
-      <div className="p-4 space-y-4">
-        <Card className={darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white'}>
-          <CardHeader className="pb-3">
-            <CardTitle className={`text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-              UMUMIY SUMMA
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              120 000 000 so'm
-            </div>
-          </CardContent>
-        </Card>
-
+      <div className="p-4 pb-0 space-y-4">
         <div className="grid grid-cols-1 gap-4">
           <Card className={darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white'}>
             <CardContent className="p-4">
@@ -481,10 +468,6 @@ const Dashboard: React.FC<DashboardProps> = ({ darkMode }) => {
       {/* Tabs */}
       <div className="px-4">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className={`grid w-full grid-cols-1 ${darkMode ? 'bg-gray-800' : 'bg-gray-100'}`}>
-            <TabsTrigger value="pharmacies">Aptekalar</TabsTrigger>
-          </TabsList>
-
           <TabsContent value="pharmacies" className="mt-4">
             <div className="space-y-3">
               {loading ? (
