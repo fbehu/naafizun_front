@@ -199,7 +199,7 @@ const Sklad: React.FC<SkladProps> = ({ darkMode, onBack, onSettingsClick }) => {
   const fetchMedicines = async () => {
     try {
       const token = localStorage.getItem("access");
-      const res = await fetch(import.meta.env.VITE_API_URL + "/products/", {
+      const res = await fetch(import.meta.env.VITE_API_URL + "/products/products/", {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -248,7 +248,7 @@ const Sklad: React.FC<SkladProps> = ({ darkMode, onBack, onSettingsClick }) => {
   }) => {
     try {
       const token = localStorage.getItem("access");
-      const res = await fetch(import.meta.env.VITE_API_URL + "/products/", {
+      const res = await fetch(import.meta.env.VITE_API_URL + "/products/products/", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
