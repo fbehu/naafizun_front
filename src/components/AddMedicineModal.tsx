@@ -199,68 +199,6 @@ const AddMedicineModal: React.FC<AddMedicineModalProps> = ({
     }
   };
 
-  const handleVirtualKey = (field: 'purchasePrice' | 'sellingPrice', key: string) => {
-    setFormData(prev => {
-      let value = prev[field];
-      if (key === 'del') {
-        value = value.slice(0, -1);
-      } else {
-        value += key;
-      }
-      return { ...prev, [field]: value };
-    });
-  };
-
-  const VirtualKeyboard = ({
-    field,
-    onKey,
-    onClose,
-    darkMode
-  }: {
-    field: 'purchasePrice' | 'sellingPrice',
-    onKey: (key: string) => void,
-    onClose: () => void,
-    darkMode: boolean
-  }) => (
-    <div className={`grid grid-cols-3 gap-2 mt-2 ${darkMode ? 'bg-gray-800' : 'bg-gray-100'} p-2 rounded-lg`}>
-      {[...'123456789'].map(n => (
-        <button
-          key={n}
-          type="button"
-          className={`py-2 rounded text-lg font-bold transition-colors duration-150 ${darkMode ? 'bg-gray-700 text-white' : 'bg-white text-gray-900'} hover:bg-blue-500 hover:text-white active:bg-blue-700`}
-          onClick={() => onKey(n)}
-        >
-          {n}
-        </button>
-      ))}
-      {/* 0 button full width */}
-      <button
-        type="button"
-        className={`col-span-3 py-2 rounded text-lg font-bold transition-colors duration-150 ${darkMode ? 'bg-gray-700 text-white' : 'bg-white text-gray-900'} hover:bg-blue-500 hover:text-white active:bg-blue-700`}
-        onClick={() => onKey('0')}
-      >
-        0
-      </button>
-      {/* O'chirish and Bekor qilish side by side */}
-      <div className="col-span-3 flex gap-2 mt-2">
-        <button
-          type="button"
-          className={`flex-1 py-2 rounded text-lg font-bold transition-colors duration-150 ${darkMode ? 'bg-gray-600 text-white' : 'bg-gray-300 text-gray-900'} hover:bg-gray-500 hover:text-white active:bg-gray-700`}
-          onClick={onClose}
-        >
-          Bekor qilish
-        </button>
-        <button
-          type="button"
-          className={`flex-1 py-2 rounded text-lg font-bold transition-colors duration-150 ${darkMode ? 'bg-red-700 text-white' : 'bg-red-100 text-red-600'} hover:bg-red-500 hover:text-white active:bg-red-700`}
-          onClick={() => onKey('del')}
-        >
-          O'chirish
-        </button>
-      </div>
-    </div>
-  );
-
   // If used as a sheet, render just the form content
   if (isSheet) {
     return (
@@ -508,10 +446,10 @@ const AddMedicineModal: React.FC<AddMedicineModalProps> = ({
             </Label>
             <Input
               id="purchasePrice"
+              type="number"
               placeholder={formData.priceType === 'pachka' ? '25000' : '1000'}
               value={formData.purchasePrice}
-              readOnly
-              onFocus={() => setActiveKeyboard('purchasePrice')}
+              onChange={e => handleInputChange('purchasePrice', e.target.value)}
               className={`h-9 ${
                 darkMode 
                   ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
@@ -525,10 +463,10 @@ const AddMedicineModal: React.FC<AddMedicineModalProps> = ({
             </Label>
             <Input
               id="sellingPrice"
+              type="number"
               placeholder={formData.priceType === 'pachka' ? '30000' : '1200'}
               value={formData.sellingPrice}
-              readOnly
-              onFocus={() => setActiveKeyboard('sellingPrice')}
+              onChange={e => handleInputChange('sellingPrice', e.target.value)}
               className={`h-9 ${
                 darkMode 
                   ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
@@ -537,14 +475,6 @@ const AddMedicineModal: React.FC<AddMedicineModalProps> = ({
             />
           </div>
         </div>
-        {activeKeyboard && (
-          <VirtualKeyboard
-            field={activeKeyboard}
-            onKey={key => handleVirtualKey(activeKeyboard, key)}
-            onClose={() => setActiveKeyboard(null)}
-            darkMode={darkMode}
-          />
-        )}
 
         {/* Total Cost Display */}
         {(formData.purchasePrice || formData.sellingPrice) && (
@@ -816,10 +746,10 @@ const AddMedicineModal: React.FC<AddMedicineModalProps> = ({
               </Label>
               <Input
                 id="purchasePrice"
+                type="number"
                 placeholder={formData.priceType === 'pachka' ? '25000' : '1000'}
                 value={formData.purchasePrice}
-                readOnly
-                onFocus={() => setActiveKeyboard('purchasePrice')}
+                onChange={e => handleInputChange('purchasePrice', e.target.value)}
                 className={`h-9 ${
                   darkMode 
                     ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
@@ -834,10 +764,10 @@ const AddMedicineModal: React.FC<AddMedicineModalProps> = ({
               </Label>
               <Input
                 id="sellingPrice"
+                type="number"
                 placeholder={formData.priceType === 'pachka' ? '30000' : '1200'}
                 value={formData.sellingPrice}
-                readOnly
-                onFocus={() => setActiveKeyboard('sellingPrice')}
+                onChange={e => handleInputChange('sellingPrice', e.target.value)}
                 className={`h-9 ${
                   darkMode 
                     ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
@@ -846,14 +776,6 @@ const AddMedicineModal: React.FC<AddMedicineModalProps> = ({
               />
             </div>
           </div>
-          {activeKeyboard && (
-            <VirtualKeyboard
-              field={activeKeyboard}
-              onKey={key => handleVirtualKey(activeKeyboard, key)}
-              onClose={() => setActiveKeyboard(null)}
-              darkMode={darkMode}
-            />
-          )}
 
           {/* Total Cost Display */}
           {(formData.purchasePrice || formData.sellingPrice) && (
