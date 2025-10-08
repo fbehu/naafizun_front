@@ -413,7 +413,7 @@ const PharmacyDetails: React.FC<PharmacyDetailsProps> = ({
       for (const sm of selectedMedicines) {
         const minusRes = await fetch(
           import.meta.env.VITE_API_URL +
-            `/products/${sm.medicine.id}/minus_stock/`,
+            `/products/products/${sm.medicine.id}/minus_stock/`,
           {
             method: "POST",
             headers: {
@@ -537,7 +537,7 @@ const PharmacyDetails: React.FC<PharmacyDetailsProps> = ({
       // Use add_stock for each product
       for (const product of receipt.products) {
         const res = await fetch(
-          `${import.meta.env.VITE_API_URL}/products/${
+          `${import.meta.env.VITE_API_URL}/products/products/${
             product.product_id
           }/add_stock/`,
           {
@@ -1080,7 +1080,7 @@ const PharmacyDetails: React.FC<PharmacyDetailsProps> = ({
                     const addRes = await fetch(
                       `${
                         import.meta.env.VITE_API_URL
-                      }/products/${pid}/add_stock/`,
+                      }/products/products/${pid}/add_stock/`,
                       {
                         method: "POST",
                         headers: {
@@ -1621,11 +1621,28 @@ const PharmacyDetails: React.FC<PharmacyDetailsProps> = ({
                                     readOnly
                                     tabIndex={0}
                                     onClick={() => {
+                                      // Save previous keyboard value if switching to another input
+                                      if (
+                                        activeKeyboardMedicineId !== null &&
+                                        activeKeyboardMedicineId !== sm.medicine.id
+                                      ) {
+                                        const prevSm = selectedMedicines.find(m => m.medicine.id === activeKeyboardMedicineId);
+                                        if (prevSm) {
+                                          if ((prevSm.medicine as any).type === 'pachka') {
+                                            updateMedicineQuantity(activeKeyboardMedicineId, "quantity_packages", keyboardValue ? parseInt(keyboardValue) : 0);
+                                          } else {
+                                            updateMedicineQuantity(activeKeyboardMedicineId, "quantity_pills", keyboardValue ? parseInt(keyboardValue) : 0);
+                                          }
+                                        }
+                                      }
                                       setActiveKeyboardMedicineId(sm.medicine.id);
                                       setKeyboardValue((sm.quantity_packages || "").toString());
                                     }}
                                     className="h-8"
                                   />
+                                  <div className="text-xs text-gray-400 mt-1">
+                                    Sklad: {sm.medicine.total_stock ?? 0} шт
+                                  </div>
                                 </div>
                               )}
                               {isDona && (
@@ -1638,6 +1655,20 @@ const PharmacyDetails: React.FC<PharmacyDetailsProps> = ({
                                     readOnly
                                     tabIndex={0}
                                     onClick={() => {
+                                      // Save previous keyboard value if switching to another input
+                                      if (
+                                        activeKeyboardMedicineId !== null &&
+                                        activeKeyboardMedicineId !== sm.medicine.id
+                                      ) {
+                                        const prevSm = selectedMedicines.find(m => m.medicine.id === activeKeyboardMedicineId);
+                                        if (prevSm) {
+                                          if ((prevSm.medicine as any).type === 'pachka') {
+                                            updateMedicineQuantity(activeKeyboardMedicineId, "quantity_packages", keyboardValue ? parseInt(keyboardValue) : 0);
+                                          } else {
+                                            updateMedicineQuantity(activeKeyboardMedicineId, "quantity_pills", keyboardValue ? parseInt(keyboardValue) : 0);
+                                          }
+                                        }
+                                      }
                                       setActiveKeyboardMedicineId(sm.medicine.id);
                                       setKeyboardValue((sm.quantity_pills || "").toString());
                                     }}
@@ -1974,7 +2005,7 @@ const PharmacyDetails: React.FC<PharmacyDetailsProps> = ({
                     const addRes = await fetch(
                       `${
                         import.meta.env.VITE_API_URL
-                      }/products/${pid}/add_stock/`,
+                      }/products/products/${pid}/add_stock/`,
                       {
                         method: "POST",
                         headers: {
@@ -2129,7 +2160,7 @@ const PharmacyDetails: React.FC<PharmacyDetailsProps> = ({
 
       {/* Add Medicine Modal */}
       <Dialog open={isAddMedicineModalOpen} onOpenChange={setIsAddMedicineModalOpen}>
-        <AddMedicineModal
+               <AddMedicineModal
           isOpen={isAddMedicineModalOpen}
           onClose={() => setIsAddMedicineModalOpen(false)}
           onAdd={async (medicineData: any) => {
