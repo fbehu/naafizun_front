@@ -228,7 +228,7 @@ const PolyclinicsPage: React.FC = () => {
       // Archive selected polyclinics
       await Promise.all(
         selectedForDelete.map(id => 
-          api.put(`/pharmacy/hospitals/${id}/`, { archived: true })
+          api.put(`/pharmacy/hospitals/${id}/archived/`, { archived: true })
         )
       );
       
