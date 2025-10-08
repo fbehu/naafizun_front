@@ -1615,28 +1615,11 @@ const PharmacyDetails: React.FC<PharmacyDetailsProps> = ({
                                 <div>
                                   <Label className="text-xs">Упаковки</Label>
                                   <Input
-                                    type="text"
-                                    inputMode="none"
-                                    value={activeKeyboardMedicineId === sm.medicine.id ? keyboardValue : (sm.quantity_packages || "")}
-                                    readOnly
-                                    tabIndex={0}
-                                    onClick={() => {
-                                      // Save previous keyboard value if switching to another input
-                                      if (
-                                        activeKeyboardMedicineId !== null &&
-                                        activeKeyboardMedicineId !== sm.medicine.id
-                                      ) {
-                                        const prevSm = selectedMedicines.find(m => m.medicine.id === activeKeyboardMedicineId);
-                                        if (prevSm) {
-                                          if ((prevSm.medicine as any).type === 'pachka') {
-                                            updateMedicineQuantity(activeKeyboardMedicineId, "quantity_packages", keyboardValue ? parseInt(keyboardValue) : 0);
-                                          } else {
-                                            updateMedicineQuantity(activeKeyboardMedicineId, "quantity_pills", keyboardValue ? parseInt(keyboardValue) : 0);
-                                          }
-                                        }
-                                      }
-                                      setActiveKeyboardMedicineId(sm.medicine.id);
-                                      setKeyboardValue((sm.quantity_packages || "").toString());
+                                    type="number"
+                                    value={sm.quantity_packages || ""}
+                                    onChange={e => {
+                                      const val = Math.max(0, Number(e.target.value) || 0);
+                                      updateMedicineQuantity(sm.medicine.id, "quantity_packages", val);
                                     }}
                                     className="h-8"
                                   />
@@ -1649,28 +1632,11 @@ const PharmacyDetails: React.FC<PharmacyDetailsProps> = ({
                                 <div>
                                   <Label className="text-xs">Штук</Label>
                                   <Input
-                                    type="text"
-                                    inputMode="none"
-                                    value={activeKeyboardMedicineId === sm.medicine.id ? keyboardValue : (sm.quantity_pills || "")}
-                                    readOnly
-                                    tabIndex={0}
-                                    onClick={() => {
-                                      // Save previous keyboard value if switching to another input
-                                      if (
-                                        activeKeyboardMedicineId !== null &&
-                                        activeKeyboardMedicineId !== sm.medicine.id
-                                      ) {
-                                        const prevSm = selectedMedicines.find(m => m.medicine.id === activeKeyboardMedicineId);
-                                        if (prevSm) {
-                                          if ((prevSm.medicine as any).type === 'pachka') {
-                                            updateMedicineQuantity(activeKeyboardMedicineId, "quantity_packages", keyboardValue ? parseInt(keyboardValue) : 0);
-                                          } else {
-                                            updateMedicineQuantity(activeKeyboardMedicineId, "quantity_pills", keyboardValue ? parseInt(keyboardValue) : 0);
-                                          }
-                                        }
-                                      }
-                                      setActiveKeyboardMedicineId(sm.medicine.id);
-                                      setKeyboardValue((sm.quantity_pills || "").toString());
+                                    type="number"
+                                    value={sm.quantity_pills || ""}
+                                    onChange={e => {
+                                      const val = Math.max(0, Number(e.target.value) || 0);
+                                      updateMedicineQuantity(sm.medicine.id, "quantity_pills", val);
                                     }}
                                     className="h-8"
                                   />
@@ -2198,6 +2164,7 @@ const PharmacyDetails: React.FC<PharmacyDetailsProps> = ({
       </Dialog>
 
       {/* AlertDialog for deleting receipt */}
+
       <AlertDialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
         <AlertDialogContent className={darkMode ? "bg-gray-800 border-gray-700" : "bg-white"}>
           <AlertDialogHeader>
