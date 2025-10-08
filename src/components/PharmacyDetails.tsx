@@ -147,7 +147,7 @@ const PharmacyDetails: React.FC<PharmacyDetailsProps> = ({
       try {
         setProductLoading(true);
         const token = localStorage.getItem("access");
-        const res = await fetch(import.meta.env.VITE_API_URL + "/products/", {
+        const res = await fetch(import.meta.env.VITE_API_URL + "/products/products/", {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
